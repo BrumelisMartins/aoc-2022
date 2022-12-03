@@ -1,3 +1,7 @@
+package day_01
+
+import readInput
+
 fun main() {
 
     fun getListOfCalories(input: List<String>): List<Int>{

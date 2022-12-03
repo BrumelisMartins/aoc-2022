@@ -1,3 +1,7 @@
+package day_02
+
+import readInput
+
 fun main() {
     /**
      * Win = 6
