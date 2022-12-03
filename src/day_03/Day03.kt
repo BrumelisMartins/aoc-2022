@@ -29,7 +29,7 @@ fun main() {
 
     fun findPriorityItemFromMultipleBags(listOfBags: List<MessyBag>): String{
         var setOfBags = listOfBags.first().bagContent.toSet()
-        listOfBags.forEachIndexed { index, messyBag ->
+        listOfBags.forEachIndexed { index, _ ->
             if (index >= listOfBags.size - 1) return@forEachIndexed
             val secondBag = listOfBags[index + 1]
             setOfBags = setOfBags.intersect(secondBag.bagContent.toSet())
