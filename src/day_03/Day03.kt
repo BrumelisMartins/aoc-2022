@@ -3,25 +3,6 @@ package day_03
 import readInput
 
 fun main() {
-    /**
-     *
-     */
-
-    val alphabet = (('a'..'z').toList() + ('A'..'Z').toList()).map { it.toString() }
-
-    fun String.toPriority(): Int {
-        return alphabet.indexOf(this) + 1
-    }
-
-    fun String.toBag(): Bag {
-        val compartmentList = chunked(length / 2) { bunchOfItems: CharSequence -> bunchOfItems.chunked(1) }
-        return Bag(compartmentList.first(), compartmentList.last())
-    }
-
-    fun String.toMessyBag(): MessyBag {
-        return MessyBag(chunked(1))
-    }
-
     fun findPriorityItem(bag: Bag): String {
         val listOfDuplicates = bag.firstCompartment.intersect(bag.secondCompartment.toSet())
         return listOfDuplicates.first()
@@ -65,6 +46,3 @@ fun main() {
     println(part2(input))
     println(part2(testInput))
 }
-
-data class Bag(val firstCompartment: List<String>, val secondCompartment: List<String>)
-data class MessyBag(val bagContent: List<String>)

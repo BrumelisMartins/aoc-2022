@@ -3,26 +3,6 @@ package day_04
 import readInput
 
 fun main() {
-    /**
-     *
-     */
-
-    fun String.toSectionList(): List<Int> {
-        val listOfSections = split('-').map { it.toInt() }
-        return (listOfSections.first()..listOfSections.last()).toList()
-    }
-
-    fun String.toGroup(): Group {
-        val groupStrings = split(',')
-        return Group(groupStrings.first().toSectionList(), groupStrings.last().toSectionList())
-    }
-
-    fun List<String>.toListOfGroups(): List<Group> {
-        return map {
-            it.toGroup()
-        }
-    }
-
     fun doAllTasksOverlap(group: Group): Boolean {
         val intersectedList = group.firstAssignmentList.intersect(group.secondAssignmentList.toSet())
         val containsInFirstList = intersectedList.containsAll(group.firstAssignmentList)
@@ -54,5 +34,3 @@ fun main() {
     println(part2(input))
     println(part1(testInput))
 }
-
-data class Group(val firstAssignmentList: List<Int>, val secondAssignmentList: List<Int>)

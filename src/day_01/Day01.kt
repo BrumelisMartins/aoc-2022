@@ -3,7 +3,6 @@ package day_01
 import readInput
 
 fun main() {
-
     fun getListOfCalories(input: List<String>): List<Int>{
         val listOfSums = arrayListOf<Int>()
         var sum = 0
