@@ -25,22 +25,19 @@ data class Ship(val craneOperations: List<CraneOperation>, val crateStacks: List
 
         private fun convertRawDataToCrateStack(list: List<String>): List<CrateStack> {
             val operationList = list.last()
-                .chunked(1)
 
-            val listOfCrateStacks = operationList.filterNot { it.isBlank() }
+            val listOfCrateStacks = operationList.filter { it.isDigit() }
                 .map {
-                    CrateStack(it.toInt(), arrayListOf())
+                    CrateStack(it.digitToInt(), arrayListOf())
                 }
 
             list.forEach { rawString ->
-                rawString.chunked(1)
-                    .forEachIndexed { index, crateName ->
-                        if (crateName.single()
-                                .isLetter()) {
-                            val stackId = operationList[index].toInt()
-                            listOfCrateStacks.find { crateStack -> crateStack.id == stackId }?.listOfCrates?.add(Crate(crateName))
-                        }
+                rawString.forEachIndexed { index, crateName ->
+                    if (crateName.isLetter()) {
+                        val stackId = operationList[index].digitToInt()
+                        listOfCrateStacks.find { crateStack -> crateStack.id == stackId }?.listOfCrates?.add(Crate(crateName.toString()))
                     }
+                }
             }
             return listOfCrateStacks
         }
@@ -53,11 +50,8 @@ data class Ship(val craneOperations: List<CraneOperation>, val crateStacks: List
     }
 
     fun getTopCrates(): String {
-        var crateName = ""
-        crateStacks.forEach {
-            if (it.listOfCrates.isNotEmpty()) crateName += it.listOfCrates.first().id
-        }
-        return crateName
+        return crateStacks.flatMap { it.listOfCrates.take(1) }
+            .joinToString(separator = "") { it.id }
     }
 
     private fun moveCrate(operation: CraneOperation, newCraneVersion: Boolean) {
