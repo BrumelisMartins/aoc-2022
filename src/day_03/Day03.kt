@@ -8,7 +8,7 @@ fun main() {
         return listOfDuplicates.first()
     }
 
-    fun findPriorityItemFromMultipleBags(listOfBags: List<MessyBag>): String{
+    fun findPriorityItemFromMultipleBags(listOfBags: List<MessyBag>): String {
         var setOfBags = listOfBags.first().bagContent.toSet()
         listOfBags.forEachIndexed { index, _ ->
             if (index >= listOfBags.size - 1) return@forEachIndexed
@@ -32,7 +32,8 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        val listOfGroupBags = input.map { it.toMessyBag() }.windowed(3, 3)
+        val listOfGroupBags = input.map { it.toMessyBag() }
+            .windowed(3, 3)
         return getPrioritySumFromMultipleGroups(listOfGroupBags)
     }
 

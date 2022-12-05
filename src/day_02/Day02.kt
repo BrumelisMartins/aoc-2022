@@ -30,11 +30,14 @@ fun main() {
     ): List<Pair<Gesture?, Gesture?>> {
         val listOfGestures = rawList.map { raw ->
             val newList = raw.split(" ")
-            val elfGesture = newList.first().toGesture()
+            val elfGesture = newList.first()
+                .toGesture()
             val myGesture = if (useSecretElfCode) {
-                newList.last().toGestureFromCode(elfGesture)
+                newList.last()
+                    .toGestureFromCode(elfGesture)
             } else {
-                newList.last().toGesture()
+                newList.last()
+                    .toGesture()
             }
             Pair(elfGesture, myGesture)
         }

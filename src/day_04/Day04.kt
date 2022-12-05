@@ -11,7 +11,8 @@ fun main() {
     }
 
     fun doesAnyTaskOverlap(group: Group): Boolean {
-        return group.firstAssignmentList.intersect(group.secondAssignmentList.toSet()).isNotEmpty()
+        return group.firstAssignmentList.intersect(group.secondAssignmentList.toSet())
+            .isNotEmpty()
     }
 
     fun getSumOfOverlappingTasks(listOfGroups: List<Group>, areTasksOverlapping: (input: Group) -> Boolean): Int {

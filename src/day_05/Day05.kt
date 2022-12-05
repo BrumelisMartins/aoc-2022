@@ -12,36 +12,42 @@ fun main() {
         return CrateOperation(move = idMap[0].toInt(), from = idMap[1].toInt(), to = idMap[2].toInt())
     }
 
-    fun <T> ArrayList<T>.removeFirstElements(count: Int){
+    fun <T> ArrayList<T>.removeFirstElements(count: Int) {
         for (i in 1..count) {
             if (isNotEmpty()) removeAt(0)
         }
     }
 
     fun convertRawDataToCrateStack(list: List<String>): List<CrateStack> {
-        val operationList = list.last().chunked(1)
+        val operationList = list.last()
+            .chunked(1)
 
-        val listOfCrateStacks =
-            operationList.filterNot { it.isBlank() }.map { CrateStack(it.toInt(), arrayListOf()) }
+        val listOfCrateStacks = operationList.filterNot { it.isBlank() }
+            .map {
+                CrateStack(it.toInt(), arrayListOf())
+            }
 
         list.forEach { rawString ->
-            rawString.chunked(1).forEachIndexed { index, crateName ->
-                if (crateName.single().isLetter()) {
-                    val stackId = operationList[index].toInt()
-                    listOfCrateStacks.find { crateStack -> crateStack.id == stackId }?.listOfCrates?.add(Crate(crateName))
+            rawString.chunked(1)
+                .forEachIndexed { index, crateName ->
+                    if (crateName.single()
+                            .isLetter()
+                    ) {
+                        val stackId = operationList[index].toInt()
+                        listOfCrateStacks.find { crateStack -> crateStack.id == stackId }?.listOfCrates?.add(Crate(crateName))
+                    }
                 }
-            }
         }
         return listOfCrateStacks
     }
 
-    fun moveCrate(operation: CrateOperation, crateList: List<CrateStack>, newCraneVersion: Boolean){
+    fun moveCrate(operation: CrateOperation, crateList: List<CrateStack>, newCraneVersion: Boolean) {
         val stackFrom = crateList.find { it.id == operation.from }
         val movableCrates = stackFrom?.listOfCrates?.take(operation.move)
 
-        if (movableCrates != null){
+        if (movableCrates != null) {
             stackFrom.listOfCrates.removeFirstElements(operation.move)
-            val newCrateList = if(newCraneVersion) movableCrates else movableCrates.reversed()
+            val newCrateList = if (newCraneVersion) movableCrates else movableCrates.reversed()
             crateList.find { it.id == operation.to }?.listOfCrates?.addAll(0, newCrateList)
         }
     }
@@ -55,7 +61,7 @@ fun main() {
                 sortingCrates = false
                 return@forEach
             }
-            if (sortingCrates){
+            if (sortingCrates) {
                 crateList.add(it)
             } else {
                 crateOperationList.add(it)
@@ -67,13 +73,13 @@ fun main() {
         return Dock(listOfOperations, listOfCratesStack)
     }
 
-    fun sortDock(dock: Dock, newCraneVersion: Boolean){
+    fun sortDock(dock: Dock, newCraneVersion: Boolean) {
         dock.crateOperations.forEach {
             moveCrate(it, dock.crateStacks, newCraneVersion)
         }
     }
 
-    fun getTopCrateName(dock: Dock): String{
+    fun getTopCrateName(dock: Dock): String {
         var crateName = ""
         dock.crateStacks.forEach {
             if (it.listOfCrates.isNotEmpty()) crateName += it.listOfCrates.first().id
@@ -94,5 +100,7 @@ fun main() {
 
 data class Crate(val id: String)
 data class CrateStack(val id: Int, val listOfCrates: ArrayList<Crate>)
+
 data class CrateOperation(val from: Int, val to: Int, val move: Int)
-data class Dock(val crateOperations: List<CrateOperation>,val crateStacks: List<CrateStack>)
+
+data class Dock(val crateOperations: List<CrateOperation>, val crateStacks: List<CrateStack>)
