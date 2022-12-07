@@ -5,6 +5,7 @@ sealed interface SystemOutput
 sealed class SystemCommand : SystemOutput {
     object ReadContent : SystemCommand()
     object MoveUp : SystemCommand()
+    object RootDirectory : SystemCommand()
     class MoveInto(val directoryName: String) : SystemCommand()
 }
 

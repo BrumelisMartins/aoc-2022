@@ -34,6 +34,7 @@ class SystemMapper {
         return when (this) {
             "\$ cd .." -> SystemCommand.MoveUp
             "\$ ls" -> SystemCommand.ReadContent
+            "\$ cd /" -> SystemCommand.RootDirectory
             else -> {
                 val directoryName = split(" ").last()
                 SystemCommand.MoveInto(directoryName)

@@ -1,7 +1,6 @@
 package day_07
 
 import readInput
-import java.util.ArrayDeque
 
 fun main() {
     val mapper = SystemMapper()
@@ -19,11 +18,13 @@ fun main() {
             .sumOf { if (it < 100000) it else 0 }
     }
 
+    fun isLargeEnough(directorySize: Int): Boolean {
+        val spaceRequiredForUpdate = 30000000
+        return controller.freeSpace + directorySize > spaceRequiredForUpdate
+    }
 
     fun part2(): Int {
-        val spaceRequiredForUpdate = 30000000
-        val usedSpace = controller.hardDrive.size
-        return controller.directorySizes.filter { (usedSpace - it) < (controller.totalSpace - spaceRequiredForUpdate) }
+        return controller.directorySizes.filter { isLargeEnough(it) }
             .min()
     }
 
