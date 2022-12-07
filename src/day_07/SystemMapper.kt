@@ -16,18 +16,15 @@ class SystemMapper {
     }
 
     private fun String.isDirectory(): Boolean {
-        return split(" ").first() == "dir"
+        return substringBefore(" ") == "dir"
     }
 
     private fun String.toFile(): SystemFile.File {
-        val splitString = split(" ")
-        return SystemFile.File(splitString.last(), splitString.first()
-            .toInt())
+        return SystemFile.File(substringAfter(" "), substringBefore(" ").toInt())
     }
 
     private fun String.toDirectory(): SystemFile.Directory {
-        val splitString = split(" ")
-        return SystemFile.Directory(splitString.last())
+        return SystemFile.Directory(substringAfter(" "))
     }
 
     private fun String.toSystemCommand(): SystemCommand {
@@ -36,8 +33,7 @@ class SystemMapper {
             "\$ ls" -> SystemCommand.ReadContent
             "\$ cd /" -> SystemCommand.RootDirectory
             else -> {
-                val directoryName = split(" ").last()
-                SystemCommand.MoveInto(directoryName)
+                SystemCommand.MoveInto(substringAfter("cd "))
             }
         }
     }
