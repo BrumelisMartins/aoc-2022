@@ -30,10 +30,10 @@ data class Forrest(val trees: List<Tree>) {
         }
 
         private fun getScene(data: List<Int>, current: Int): Scene {
-            val isVisible = data.firstOrNull { it >= current } == 0
+            val visibility = data.firstOrNull { it >= current } == null
             val indexOfObstruction = data.indexOfFirst { it >= current }
             val scenicScore = if (indexOfObstruction == -1) data.size else indexOfObstruction + 1
-            return Scene(scenicScore, isVisible)
+            return Scene(scenicScore, visibility)
         }
     }
 
