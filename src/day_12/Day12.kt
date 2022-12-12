@@ -3,6 +3,7 @@ package day_12
 import day_03.alphabet
 import readInput
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 fun main() {
@@ -13,18 +14,19 @@ fun main() {
 
     fun part1(): Int {
         val finder = PathFinder(fromRawData(input))
+        finder.run()
         val shortest = finder.findShortestPath()
 
 
-//        val newlist = finder.sourceDataGrid.map { if (shortest.contains(it)) it.value else "." }
-//            .chunked(input.first().length)
-//        newlist.forEach {
-//            it.forEach { string ->
-//                print(string)
-//            }
-//            println()
-//        }
-        println(shortest)
+        val newlist = finder.sourceDataGrid.map { if (shortest.contains(it)) it.value else "." }
+            .chunked(input.first().length)
+        newlist.forEach {
+            it.forEach { string ->
+                print(string)
+            }
+            println()
+        }
+        println(shortest.size)
         return 0
     }
 
@@ -63,7 +65,9 @@ fun fromRawData(rawData: List<String>): List<Node> {
 
 fun isAdjacent(current: Node, childNode: Node?): Boolean {
     if (childNode == null) return false
-    return (current.height >= childNode.height - 1)
+    val height = alphabet.indexOf(current.value.mapToElevation())
+    val childHeight = alphabet.indexOf(childNode.value.mapToElevation())
+    return (childHeight - height) <= 1
 }
 
 fun String.mapToElevation(): String {
@@ -72,41 +76,52 @@ fun String.mapToElevation(): String {
     else this
 }
 
-data class Node(val index: Int, val value: String, val height: Int = alphabet.indexOf(value.mapToElevation())) {
-    val adjacentNodes = arrayListOf<Node>()
-
+data class Node(val index: Int, val value: String, val adjacentNodes: ArrayList<Node> = arrayListOf()) {
     fun addAdjacentNode(childNode: Node?) {
-        if (isAdjacent(this, childNode)) {
-            adjacentNodes.add(childNode!!)
-        }
+        if (isAdjacent(this, childNode)) adjacentNodes.add(childNode!!)
     }
 }
 
-data class Step(val node: Node, val distance: Int = 0) {
-    fun toward(node: Node): Step =
-        Step(node, distance + 1)
-}
+class PathFinder(val sourceDataGrid: List<Node>) {
 
-class PathFinder(sourceDataGrid: List<Node>) {
-
+    private val nodeCount = sourceDataGrid.size // number of nodes
     private val source = sourceDataGrid.first()
     private val destination = sourceDataGrid.first { it.value == "E" }
 
-    fun findShortestPath(): Int {
-        val queue: Queue<Step> = ArrayDeque<Step>().apply { add(Step(source)) }
-        val visited = mutableSetOf(source)
+    private var queue = ArrayDeque<Node>()
+    private var visited = mutableListOf(source)
 
+
+    val lengths = IntArray(nodeCount)
+    private val parents = sourceDataGrid.toMutableList()
+
+
+    fun run() {
+        queue.push(source)
         while (!queue.isEmpty()) {
-            val current = queue.poll()
-            if (current.node == destination) return current.distance
-            current.node.adjacentNodes.forEach {
+            val current = queue.pop()
+            current.adjacentNodes.forEach {
                 if (!visited.contains(it)) {
                     visited.add(it)
-                    queue.add(current.toward(it))
+                    queue.addLast(it)
+                    lengths[it.index] = lengths[current.index] + 1
+                    parents[it.index] = current
                 }
             }
         }
-        return 0
     }
 
+    fun findShortestPath(): List<Node> {
+        return if (!visited.contains(destination)) {
+            listOf()
+        } else {
+            val path = arrayListOf(destination)
+            var v: Node = destination
+            while (v.index != 0) {
+                path.add(parents[v.index])
+                v = parents[v.index]
+            }
+            path.reversed()
+        }
+    }
 }
